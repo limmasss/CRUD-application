@@ -9,16 +9,15 @@
     <a th:text="'Welcome to control panel, ' + ${admin.getName()}"/>
 </div>
 <div th:each="user : ${users}">
-    <a th:href="@{/admin/users/{id} (id=${user.getId()})}" th:text="${user.getName()}"></a>
-<!--    <a th:href="@{/admin/users/{id}/edit (id=${user.getId()})}" th:text="edit"></a>-->
-    <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})}">
+    <a th:href="@{/admin/{id} (id=${user.getId()})}" th:text="${user.getName()}"></a>
+    <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
         <input type="submit" value="Delete"/>
     </form>
-    <form th:method="GET" th:action="@{/admin/users/{id}/edit (id=${user.getId()})}">
+    <form th:method="GET" th:action="@{/admin/{id}/edit (id=${user.getId()})}">
         <input type="submit" value="Edit"/>
     </form>
 </div>
-<form th:action="@{/admin/users/new}">
+<form th:action="@{/admin/new}">
     <input type="submit" value="New">
 </form>
 <form th:action="@{/logout}">

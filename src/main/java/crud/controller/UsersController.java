@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 
 @Controller
-@RequestMapping("/admin/users")
+@RequestMapping("/admin")
 @AllArgsConstructor
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class UsersController {
@@ -54,7 +54,7 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "/users/new";
         }
-        return "redirect:/admin/users/";
+        return "redirect:/admin/";
     }
 
     @GetMapping("/{id}")
@@ -82,13 +82,13 @@ public class UsersController {
             }
         }
         userService.update(user.getId(), user);
-        return "redirect:/admin/users/";
+        return "redirect:/admin/";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id) {
         userService.delete(id);
-        return "redirect:/admin/users/";
+        return "redirect:/admin/";
     }
 
     private void validateRoles(Map<String, String> form, BindingResult bindingResult) {
