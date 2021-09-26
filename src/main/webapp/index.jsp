@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<a href="/login">Login</a> or <a href="/signup">Sign Up</a>
 </body>
 </html>

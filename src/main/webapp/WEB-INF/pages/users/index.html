@@ -5,18 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<div th:each="user : ${users}">
-    <p>
-        <a th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user}"/>
-        <a th:href="@{/users/{id}/edit/(id=${user.getId()})}" th:text="edit"/>
-        <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
-            <input type="submit" value="Delete">
-        </form>
-    </p>
+<div>
+    <a th:text="'Welcome to control panel, ' + ${admin.getName()}"/>
 </div>
-<br/>
-<p>
-    <a href="/users/new">Create new user</a>
-</p>
+<div th:each="user : ${users}">
+    <a th:href="@{/admin/users/{id} (id=${user.getId()})}" th:text="${user.getName()}"></a>
+<!--    <a th:href="@{/admin/users/{id}/edit (id=${user.getId()})}" th:text="edit"></a>-->
+    <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})}">
+        <input type="submit" value="Delete"/>
+    </form>
+    <form th:method="GET" th:action="@{/admin/users/{id}/edit (id=${user.getId()})}">
+        <input type="submit" value="Edit"/>
+    </form>
+</div>
+<form th:action="@{/admin/users/new}">
+    <input type="submit" value="New">
+</form>
+<form th:action="@{/logout}">
+    <input type="submit" value="Logout">
+</form>
 </body>
 </html>

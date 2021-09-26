@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+</head>
+<body>
+  <form th:action="@{/signup/}" th:method="POST" th:object="${user}">
+      <label for="name">Enter name</label>
+      <input type="text" th:field="*{name}" id="name"/>
+      <label for="password">Enter password</label>
+      <input type="text" th:field="*{password}" id="password"/>
+      <input type="submit" value="Sign Up!">
+      <div style="color: darkred" th:if="${#fields.hasGlobalErrors()}">
+          <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"/>
+      </div>
+  </form>
+</body>
+</html>

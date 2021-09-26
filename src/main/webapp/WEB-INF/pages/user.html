@@ -5,6 +5,7 @@
     <title th:text="${user.getName()}"></title>
 </head>
 <body>
+<p th:text="'Hello, ' + ${user.getName()} + '. This is your own page.'"></p>
 <div>
     <p th:text="'Name = ' + ${user.getName()}"/>
     <p th:text="'Age = ' + ${user.getAge()}"/>

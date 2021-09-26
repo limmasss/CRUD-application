@@ -2,18 +2,39 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>New</title>
 </head>
 <body>
-    <form th:method="POST" th:action="@{/users/}" th:object="${user}">
+    <form th:method="POST" th:action="@{/admin/users/}" th:object="${user}">
         <label for="name">Enter name:</label>
         <input type="text" th:field="*{name}" id="name">
-        <label for="lastname">Enter lastname:</label>
-        <input type="text" th:field="*{lastName}" id="lastname">
+        <div style="color: darkred" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </br>
         <label for="age">Enter age:</label>
         <input type="text" th:field="*{age}" id="age">
+        <div style="color: darkred" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
         </br>
-        <input type="submit" value="Create user!">
+        <label for="password">Enter password:</label>
+        <input type="password" th:field="*{password}" id="password"/>
+        <div style="color: darkred" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </br>
+        <div th:each="statusOption : ${T(crud.models.Status).values()}">
+            <input type="radio" th:field="*{status}" th:value="${statusOption}">
+            <label th:for="${#ids.prev('status')}" th:text="${statusOption}">Status</label>
+        </div>
+        <div style="color: darkred" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+        <div th:each="role : ${T(crud.models.Role).values()}">
+            <input type="checkbox" th:checked="${role.equals(T(crud.models.Role).ROLE_USER)}" th:value="${role}" th:text="${role}" th:name="${role}"/>
+        </div>
+        <div style="color: darkred" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></div>
+        </br>
+        <input type="submit" value="Create">
+        <div style="color: darkred" th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"/>
+        </div>
+    </form>
+    <form th:action="@{/logout}">
+        <input type="submit" value="Logout">
     </form>
 </body>
 </html>
