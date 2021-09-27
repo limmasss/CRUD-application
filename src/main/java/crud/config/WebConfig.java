@@ -1,77 +1,33 @@
 package crud.config;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import javax.sql.DataSource;
-import java.util.Properties;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("crud")
-@PropertySource("classpath:database.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "crud.repository")
 public class WebConfig implements WebMvcConfigurer {
 
-    private Environment environment;
     private ApplicationContext applicationContext;
 
-    public WebConfig(Environment environment, ApplicationContext applicationContext) {
-        this.environment = environment;
+    public WebConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-    }
-
-    @Bean
-    public DataSource dataSource(){
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty("database.driver"));
-        dataSource.setUrl(environment.getProperty("database.url"));
-        dataSource.setUsername(environment.getProperty("database.username"));
-        dataSource.setPassword(environment.getProperty("database.password"));
-        return dataSource;
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan("crud.models");
-
-        Properties properties = new Properties();
-        properties.put("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
-        properties.put("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
-        properties.put("hibernate.dialect", environment.getProperty("hibernate.dialect"));
-
-        entityManagerFactoryBean.setJpaProperties(properties);
-        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        return entityManagerFactoryBean;
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager(){
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return jpaTransactionManager;
     }
 
     @Bean
@@ -96,10 +52,10 @@ public class WebConfig implements WebMvcConfigurer {
         return new BCryptPasswordEncoder(12);
     }
 
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine(templateEngine());
-        registry.viewResolver(resolver);
+    @Bean
+    public FilterRegistrationBean hiddenHttpMethodsFilter(){
+        FilterRegistrationBean filterRegBean = new FilterRegistrationBean(new HiddenHttpMethodFilter());
+        filterRegBean.setUrlPatterns(Arrays.asList("/*"));
+        return filterRegBean;
     }
 }

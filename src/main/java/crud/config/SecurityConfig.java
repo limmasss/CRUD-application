@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -21,22 +20,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService, AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public SecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService,
+                          AuthenticationSuccessHandler authenticationSuccessHandler,
+                          PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
-    }
-
-    @Bean
-    protected PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(12);
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     protected DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         return daoAuthenticationProvider;
     }
 
@@ -49,7 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().
                 antMatchers("/").permitAll().
-                //antMatchers("/users/").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')").
                 and().formLogin().successHandler(authenticationSuccessHandler);
     }
 }

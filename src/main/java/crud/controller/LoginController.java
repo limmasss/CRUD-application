@@ -20,6 +20,11 @@ public class LoginController {
 
     private UserService userService;
 
+    @GetMapping
+    public String mainPage(){
+        return "/index";
+    }
+
     @GetMapping("/signup")
     public String signUp(Model model){
         model.addAttribute("user", new User());

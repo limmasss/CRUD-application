@@ -3,6 +3,7 @@ package crud.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -36,7 +37,6 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
-    @Min(value = 1, message = "Age should be more than 0")
     private byte age;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
